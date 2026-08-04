@@ -6,6 +6,19 @@ function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
   const [resumeText,setResumeText]=useState("");
+  const [isDragging,setIsDragging]=useState(false);
+  function handleAnalyze() {
+
+  if (!selectedFile && resumeText.trim() === "") {
+    setError("Please upload a resume or paste resume text.");
+    return;
+  }
+
+  setError("");
+
+  alert("Resume analysis will start here!");
+
+}
 
   return (
     <div className="container">
@@ -35,10 +48,46 @@ function App() {
     setSelectedFile(file);
   }}
 />
+<div
+  className={`drop-zone ${isDragging ? "dragging" : ""}`}
 
-        <button onClick={() => document.getElementById("resumeInput").click()}>
-          Upload Resume
-        </button>
+  onDragOver={(event) => {
+    event.preventDefault();
+    setIsDragging(true);
+  }}
+
+  onDragLeave={() => {
+    setIsDragging(false);
+  }}
+
+  onDrop={(event) => {
+    event.preventDefault();
+
+    setIsDragging(false);
+
+    const file = event.dataTransfer.files[0];
+
+    if (!file) return;
+
+    if (file.type !== "application/pdf") {
+      setError("Please upload a PDF file.");
+      setSelectedFile(null);
+      return;
+    }
+
+    setError("");
+    setSelectedFile(file);
+  }}
+
+  onClick={() => document.getElementById("resumeInput").click()}
+>
+
+  <h3>📄 Drop Resume Here</h3>
+
+  <p>or Click to Upload</p>
+
+</div>
+        
       </>
       <hr />
 
@@ -51,7 +100,10 @@ function App() {
   onChange={(event) => setResumeText(event.target.value)}
 ></textarea>
 
-<button className="analyze-btn">
+<button
+  className="analyze-btn"
+  onClick={handleAnalyze}
+>
   Analyze Resume
 </button>
       {error && (

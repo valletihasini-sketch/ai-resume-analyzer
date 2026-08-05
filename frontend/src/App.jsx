@@ -7,16 +7,19 @@ function App() {
   const [error, setError] = useState("");
   const [resumeText,setResumeText]=useState("");
   const [isDragging,setIsDragging]=useState(false);
+  const [message,setMessage]=useState("");
   function handleAnalyze() {
 
   if (!selectedFile && resumeText.trim() === "") {
     setError("Please upload a resume or paste resume text.");
+    setMessage("");
     return;
   }
 
   setError("");
 
-  alert("Resume analysis will start here!");
+  setMessage("Resume received! AI analysis will start soon.");
+ 
 
 }
 
@@ -111,6 +114,11 @@ function App() {
     {error}
   </p>
 )}
+ {message &&(
+    <p style={{color:"green",fontWeight:"bold"}}>
+      {message}
+    </p>
+  )}
 
       {selectedFile ? (
   <>
@@ -119,7 +127,9 @@ function App() {
     <button
   onClick={() => {
     setSelectedFile(null);
+    setResumeText("");
     setError("");
+    setMessage("");
   }}
 >
   Remove File
